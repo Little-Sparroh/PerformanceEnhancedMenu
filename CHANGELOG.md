@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 (2025-11-26)
+
+### Misc
+* Removed Green Prism Bugfix from the code
+* Tried to make it slightly more performant
+* Cleaned up code for release
+* Improved Thunderstore description
+
 ## 1.0.0 (2025-10-07)
 
 ### Features

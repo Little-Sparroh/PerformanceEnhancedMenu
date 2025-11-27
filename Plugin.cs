@@ -10,11 +10,12 @@ using UnityEngine;
 namespace PerformanceEnhancedMenu;
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+[MycoMod(null, ModFlags.IsClientSide)]
 public class Plugin : BaseUnityPlugin
 {
     public const string PluginGUID = "sparroh.performanceenhancedmenu";
     public const string PluginName = "PerformanceEnhancedMenu";
-    public const string PluginVersion = "1.0.0";
+    public const string PluginVersion = "1.0.1";
 
     internal new static ManualLogSource Logger;
 

@@ -8,7 +8,6 @@ namespace PerformanceEnhancedMenu;
 
 public static class StatCalcPatches
 {
-    // Shared static data and caches
     internal static Dictionary<long, string> statListCache = new();
     internal static Dictionary<long, string> displayPropertiesCache = new();
     internal static string tempOldProperties;
@@ -23,7 +22,6 @@ public static class StatCalcPatches
     internal static Dictionary<int, int> numEmptyCellsTouching = new();
     internal static Dictionary<int, int> numUniqueUpgradesTouching = new();
 
-    // Static method info fields (initialized in static constructor)
     internal static MethodInfo addDynamicPropMethod;
     internal static MethodInfo textBlocksGetStringMethod;
     internal static Type overrideType;
@@ -69,7 +67,6 @@ public static class StatCalcPatches
         }
     }
 
-    // Main recomputation logic shared by patches
     internal static void RecomputeTotals(PlayerData.GearData gearData)
     {
         rarityTouchingCounts.Clear();

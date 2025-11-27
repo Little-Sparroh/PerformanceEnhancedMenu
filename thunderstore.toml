@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "Sparroh"
 name = "PerformanceEnhancedMenu"
-description = "It fast. Rewrote a bunch of the game with how it handles upgrades."
+description = "Performance-enhancing mod that caches gear upgrade calculations to eliminate menu lag for heavy equipment."
 websiteUrl = "https://github.com/Little-Sparroh/PerformanceEnhancedMenu"
 containsNsfwContent = false
 
@@ -34,5 +34,3 @@ communities = [ "mycopunk" ]
 
 [publish.categories]
 mycopunk = [ "client" ]
-
-
