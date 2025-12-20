@@ -12,16 +12,7 @@
             https://nuget.samboy.dev/v3/index.json
         </RestoreAdditionalProjectSources>
         <RootNamespace>PerformanceEnhancedMenu</RootNamespace>
-
-        <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
-
-    <Target Name="SetModVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
-        <PropertyGroup>
-            <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
-            <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
-        </PropertyGroup>
-    </Target>
 
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
@@ -376,5 +367,7 @@
       </Reference>
     </ItemGroup>
 
-
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="copy &quot;$(TargetPath)&quot; &quot;%USERPROFILE%\AppData\Roaming\r2modmanPlus-local\Mycopunk\profiles\Default\BepInEx\plugins\$(TargetFileName)&quot;" />
+    </Target>
 </Project>

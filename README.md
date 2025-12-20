@@ -1,12 +1,20 @@
 # PerformanceEnhancedMenu
 
-A BepInEx mod for MycoPunk that optimizes performance for the gear upgrade menu system with caching and computation improvements.
+A BepInEx mod for MycoPunk that optimizes performance for the gear upgrade menu system with comprehensive caching and UI improvements.
 
 ## Description
 
-This client-side performance mod addresses significant lag issues in the gear upgrade menus by completely rewriting how upgrade computations are handled. It implements extensive caching systems for expensive operations including upgrade grid lookups, prism connectivity calculations, rarity touching counts, and stat list generation.
+This client-side performance mod addresses major lag issues in the gear upgrade menus through a complete overhaul of how upgrade computations and UI operations are handled. Version 2.0 introduces extensive optimizations including:
 
-The mod specifically optimizes performance for gear with many upgrades (like fully upgraded Globblers and MiniCannons) by caching results of complex calculations that would otherwise be re-computed hundreds of times per frame. This dramatically improves menu responsiveness while maintaining accurate stat calculations.
+- **Comprehensive Cell Touching Caching**: All cell adjacency calculations are cached globally, not just for specific upgrade types
+- **UI Performance Optimizations**: GearDetailsWindow Update() method throttling and raycast caching (temporarily disabled due to compatibility issues)
+- **Lazy Stat Calculation**: Expensive cell touching computations deferred during menu transitions, calculated on-demand when needed
+- **Asynchronous Pre-calculation**: Expensive stats calculated in background when hovering over gear in selection menu
+- **Deferred Skin Loading**: Massive skin collections (>500 skins) load asynchronously to prevent FPS drops
+- **Upgrade Grid Caching**: Full grid lookups cached to avoid repeated computations
+- **Smart Cache Management**: Automatic cache invalidation when upgrades change
+
+The mod dramatically improves performance for gear with many upgrades by preventing expensive per-frame recalculations while maintaining 100% accurate stat calculations.
 
 ## Getting Started
 

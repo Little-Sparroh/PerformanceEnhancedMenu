@@ -24,6 +24,7 @@ public static class GeneralPatches
                 return;
             }
             StatCalcPatches.ClearCaches();
+            PerformanceEnhancedMenu.ClearAllCaches(); // Clear PerformanceEnhancedMenu caches too
             StatCalcPatches.RecomputeTotals(__instance);
         }
     }
@@ -45,12 +46,19 @@ public static class GeneralPatches
                 return;
             }
             StatCalcPatches.ClearCaches();
+            PerformanceEnhancedMenu.ClearAllCaches(); // Clear PerformanceEnhancedMenu caches too
             StatCalcPatches.RecomputeTotals(__instance);
         }
     }
 
     public static class GetEquippedUpgradePatch
     {
+        public static MethodBase TargetMethod()
+        {
+            var method = AccessTools.Method(typeof(PlayerData), "GetEquippedUpgrade", new[] { typeof(IUpgradable), typeof(int), typeof(int) });
+            return method;
+        }
+
         public static bool Prefix(IUpgradable gear, int x, int y, ref UpgradeInstance __result)
         {
             int gearId = gear.Info.ID;
