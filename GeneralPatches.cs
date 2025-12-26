@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using HarmonyLib;
-using UnityEngine;
-
-namespace PerformanceEnhancedMenu;
 
 public static class GeneralPatches
 {
@@ -19,13 +14,20 @@ public static class GeneralPatches
 
         public static void Postfix(PlayerData.GearData __instance, UpgradeInstance upgrade, sbyte x, sbyte y, byte rotation)
         {
-            if (StatCalcPatches.skipRecompute)
+            try
             {
-                return;
+                if (StatCalcPatches.skipRecompute)
+                {
+                    return;
+                }
+                StatCalcPatches.ClearCaches();
+                PerformanceEnhancedMenu.ClearAllCaches();
+                StatCalcPatches.RecomputeTotals(__instance);
             }
-            StatCalcPatches.ClearCaches();
-            PerformanceEnhancedMenu.ClearAllCaches(); // Clear PerformanceEnhancedMenu caches too
-            StatCalcPatches.RecomputeTotals(__instance);
+            catch (Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in EquipUpgradePatch.Postfix: {e.Message}\n{e.StackTrace}");
+            }
         }
     }
 
@@ -39,15 +41,22 @@ public static class GeneralPatches
 
         public static void Postfix(PlayerData.GearData __instance, UpgradeInstance upgrade)
         {
-            StatCalcPatches.prismConnectedCounts.Remove(upgrade.InstanceID);
-            StatCalcPatches.rarityTouchingCounts.Remove(upgrade.InstanceID);
-            if (StatCalcPatches.skipRecompute)
+            try
             {
-                return;
+                StatCalcPatches.prismConnectedCounts.Remove(upgrade.InstanceID);
+                StatCalcPatches.rarityTouchingCounts.Remove(upgrade.InstanceID);
+                if (StatCalcPatches.skipRecompute)
+                {
+                    return;
+                }
+                StatCalcPatches.ClearCaches();
+                PerformanceEnhancedMenu.ClearAllCaches();
+                StatCalcPatches.RecomputeTotals(__instance);
             }
-            StatCalcPatches.ClearCaches();
-            PerformanceEnhancedMenu.ClearAllCaches(); // Clear PerformanceEnhancedMenu caches too
-            StatCalcPatches.RecomputeTotals(__instance);
+            catch (Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in UnequipUpgradePatch.Postfix: {e.Message}\n{e.StackTrace}");
+            }
         }
     }
 
@@ -61,31 +70,39 @@ public static class GeneralPatches
 
         public static bool Prefix(IUpgradable gear, int x, int y, ref UpgradeInstance __result)
         {
-            int gearId = gear.Info.ID;
-            if (!StatCalcPatches.upgradeGridCache.TryGetValue(gearId, out var grid))
+            try
             {
-                gear.Info.GetUpgradeGridSize(out var width, out var height);
-                grid = new UpgradeInstance[width, height];
-                var gearData = PlayerData.GetGearData(gear);
-                System.Collections.IList equippedUpgrades = (System.Collections.IList)StatCalcPatches.equippedUpgradesField.GetValue(gearData);
-                foreach (var eq in equippedUpgrades)
+                int gearId = gear.Info.ID;
+                if (!StatCalcPatches.upgradeGridCache.TryGetValue(gearId, out var grid))
                 {
-                    UpgradeInstance u = (UpgradeInstance)StatCalcPatches.getUpgradeMethod.Invoke(eq, null);
-                    if (u != null)
+                    gear.Info.GetUpgradeGridSize(out var width, out var height);
+                    grid = new UpgradeInstance[width, height];
+                    var gearData = PlayerData.GetGearData(gear);
+                    System.Collections.IList equippedUpgrades = (System.Collections.IList)StatCalcPatches.equippedUpgradesField.GetValue(gearData);
+                    foreach (var eq in equippedUpgrades)
                     {
-                        using (var enumerator = u.GetEquippedCells(gear))
+                        UpgradeInstance u = (UpgradeInstance)StatCalcPatches.getUpgradeMethod.Invoke(eq, null);
+                        if (u != null)
                         {
-                            while (enumerator.MoveNext())
+                            using (var enumerator = u.GetEquippedCells(gear))
                             {
-                                grid[enumerator.X, enumerator.Y] = u;
+                                while (enumerator.MoveNext())
+                                {
+                                    grid[enumerator.X, enumerator.Y] = u;
+                                }
                             }
                         }
                     }
+                    StatCalcPatches.upgradeGridCache[gearId] = grid;
                 }
-                StatCalcPatches.upgradeGridCache[gearId] = grid;
+                __result = grid[x, y];
+                return false;
             }
-            __result = grid[x, y];
-            return false;
+            catch (Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetEquippedUpgradePatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 }

@@ -1,5 +1,50 @@
 # Changelog
 
+## 2.3.0 (2025-12-24)
+
+### New Features
+* **Virtualized Upgrade List**: Automatic virtualization for upgrade/skin lists exceeding 1000 items to prevent UI performance degradation
+
+### Performance Improvements
+* Dramatically reduced memory usage and rendering overhead for large inventories
+* Smooth scrolling performance maintained regardless of inventory size
+
+### Technical Enhancements
+* New VirtualizedUpgradeList.cs with object pooling and scroll-based visibility management
+* Integration into TransitionOptimizationPatches.cs for seamless activation
+* Smart threshold-based activation (>1000 items) to avoid overhead for smaller inventories
+
+## 2.2.0 (2025-12-23)
+
+### New Features
+* **Inventory Limit System**: Limits upgrades and skins per gear to 256 items to prevent excessive inventory bloat
+* **Automatic Enforcement**: Excess upgrades are moved to rented upgrades on game load and during collection
+* **User Feedback**: Chat message notification when upgrade limit is reached
+
+### Technical Enhancements
+* Integrated inventory limit patches into PlayerDataPatches.cs
+* Added Harmony patches for PlayerData.CollectInstance and PlayerData.OnAwake methods
+* Seamless integration with existing performance optimizations
+
+## 2.1.0 (2025-12-21)
+
+### New Features
+* **Debounced Expensive Calculations**: Added 5-second debouncing for upgrade equip/unequip actions to prevent performance hits during rapid bulk operations
+* **Smart Calculation Deferral**: Expensive stat recalculations (like MiniCannon prism connectivity) are deferred during rapid equip/unequip sequences
+* **Automatic Resume**: Calculations resume normally after 5 seconds of inactivity
+
+### Performance Improvements
+* Prevents expensive RecomputeTotals calls during rapid upgrade management
+* Reduces computational overhead when equipping/unequipping multiple upgrades quickly
+* Maintains responsiveness during bulk upgrade operations
+* Defers expensive prism connectivity calculations (DFS graph building) during rapid operations
+* Returns safe default values for prism stats when deferring calculations
+
+### Technical Enhancements
+* New DebouncePatches.cs with Harmony patches for PlayerData.GearData equip/unequip methods
+* Debounce coroutine management in PerformanceEnhancedMenu.cs
+* Modified AsynchronousPrecalcPatches.cs to respect defer flags
+
 ## 2.0.0 (2025-12-20)
 
 ### Major Features

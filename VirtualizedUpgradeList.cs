@@ -4,15 +4,11 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PerformanceEnhancedMenu;
-
 public static class VirtualizedUpgradeList
 {
-    // Configuration
-    private const int VISIBLE_BUFFER = 10; // Extra items to keep rendered outside viewport
-    private const float ITEM_HEIGHT = 60f; // Approximate height of each upgrade item
+    private const int VISIBLE_BUFFER = 10;
+    private const float ITEM_HEIGHT = 60f;
 
-    // State tracking
     private static List<UpgradeInstance> allUpgrades = new();
     private static Dictionary<int, GearUpgradeUI> activeUIElements = new();
     private static List<GearUpgradeUI> uiPool = new();
@@ -22,7 +18,6 @@ public static class VirtualizedUpgradeList
     private static bool isVirtualized = false;
     private static GearUpgradeUI uiPrefab;
 
-    // Viewport tracking
     private static float viewportHeight = 0f;
     private static float currentScrollPosition = 0f;
 
@@ -32,10 +27,8 @@ public static class VirtualizedUpgradeList
         upgradeListParent = parent;
         scrollRect = scroll;
 
-        // Calculate viewport height
         viewportHeight = parent.rect.height;
 
-        // Hook into scroll events
         scrollRect.onValueChanged.AddListener(OnScrollChanged);
 
         isVirtualized = true;
@@ -48,10 +41,8 @@ public static class VirtualizedUpgradeList
         allUpgrades = new List<UpgradeInstance>(upgrades);
         uiPrefab = prefab;
 
-        // Clear existing UI
         ClearActiveUI();
 
-        // Render initial visible items
         UpdateVisibleItems();
     }
 
@@ -84,11 +75,9 @@ public static class VirtualizedUpgradeList
         int visibleStart = CalculateVisibleStartIndex();
         int visibleEnd = CalculateVisibleEndIndex();
 
-        // Add buffer
         visibleStart = Math.Max(0, visibleStart - VISIBLE_BUFFER);
         visibleEnd = Math.Min(allUpgrades.Count - 1, visibleEnd + VISIBLE_BUFFER);
 
-        // Remove items that are no longer visible
         var toRemove = new List<int>();
         foreach (var kvp in activeUIElements)
         {
@@ -103,7 +92,6 @@ public static class VirtualizedUpgradeList
             activeUIElements.Remove(index);
         }
 
-        // Add new visible items
         for (int i = visibleStart; i <= visibleEnd; i++)
         {
             if (!activeUIElements.ContainsKey(i))
@@ -127,7 +115,6 @@ public static class VirtualizedUpgradeList
 
         if (isGridView)
         {
-            // Grid layout logic
             double num1 = (double)upgradeListParent.rect.width - 6.0;
             UnityEngine.Rect rect = transform.rect;
             double num2 = (double)rect.width + 10.0;
@@ -144,7 +131,6 @@ public static class VirtualizedUpgradeList
         }
         else
         {
-            // List layout logic
             transform.offsetMin = new Vector2(0.0f, transform.offsetMin.y);
             transform.offsetMax = new Vector2(0.0f, transform.offsetMax.y);
             transform.anchoredPosition = new Vector2(0.0f, (float)(-3.0 - (transform.rect.height + 4.0) * index));
@@ -158,13 +144,11 @@ public static class VirtualizedUpgradeList
 
         if (isGridView)
         {
-            // Grid calculation - more complex
-            return 0; // Simplified for now
+            return 0;
         }
         else
         {
-            // List layout
-            float scrollPos = 1f - currentScrollPosition; // Unity scroll is inverted
+            float scrollPos = 1f - currentScrollPosition;
             float totalHeight = allUpgrades.Count * (ITEM_HEIGHT + 4f);
             float visibleStartY = scrollPos * (totalHeight - viewportHeight);
             return Math.Max(0, (int)(visibleStartY / (ITEM_HEIGHT + 4f)));
@@ -178,12 +162,10 @@ public static class VirtualizedUpgradeList
 
         if (isGridView)
         {
-            // Grid calculation
-            return Math.Min(allUpgrades.Count - 1, CalculateVisibleStartIndex() + 50); // Estimate
+            return Math.Min(allUpgrades.Count - 1, CalculateVisibleStartIndex() + 50);
         }
         else
         {
-            // List layout
             int start = CalculateVisibleStartIndex();
             int visibleCount = (int)(viewportHeight / (ITEM_HEIGHT + 4f)) + 1;
             return Math.Min(allUpgrades.Count - 1, start + visibleCount);
@@ -217,7 +199,6 @@ public static class VirtualizedUpgradeList
         currentWindow = null;
     }
 
-    // Public API for other patches
     public static bool IsVirtualized => isVirtualized;
     public static GearUpgradeUI GetUIForUpgrade(UpgradeInstance upgrade)
     {

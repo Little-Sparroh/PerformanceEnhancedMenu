@@ -1,21 +1,15 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
-using UnityEngine;
-
-namespace PerformanceEnhancedMenu;
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 [MycoMod(null, ModFlags.IsClientSide)]
-public class Plugin : BaseUnityPlugin
+public class SparrohPlugin : BaseUnityPlugin
 {
-    public const string PluginGUID = "sparroh.performanceenhancedmenu";
-    public const string PluginName = "PerformanceEnhancedMenu";
-    public const string PluginVersion = "2.0.0";
+    public const string PluginGUID = "sparroh.enhancedmenuperformance";
+    public const string PluginName = "EnhancedMenuPerformance";
+    public const string PluginVersion = "2.2.0";
 
     internal new static ManualLogSource Logger;
 
@@ -27,7 +21,6 @@ public class Plugin : BaseUnityPlugin
 
         MethodBase method;
 
-        // General patches
         method = GeneralPatches.EquipUpgradePatch.TargetMethod();
         if (method != null)
         {
@@ -52,104 +45,6 @@ public class Plugin : BaseUnityPlugin
                     nameof(GeneralPatches.GetEquippedUpgradePatch.Prefix)));
         }
 
-        /*
-        // Cell touching patches - commented out due to incorrect cached values
-        method = CellTouchingPatches.GetConnectedPrismCountRecursivePatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(CellTouchingPatches.GetConnectedPrismCountRecursivePatch),
-                    nameof(CellTouchingPatches.GetConnectedPrismCountRecursivePatch.Prefix)));
-        }
-
-        method = CellTouchingPatches.GetNumCellsTouchingThisPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(CellTouchingPatches.GetNumCellsTouchingThisPatch),
-                    nameof(CellTouchingPatches.GetNumCellsTouchingThisPatch.Prefix)));
-        }
-
-        method = CellTouchingPatches.GetNumRaritiesTouchingThisPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(CellTouchingPatches.GetNumRaritiesTouchingThisPatch),
-                    nameof(CellTouchingPatches.GetNumRaritiesTouchingThisPatch.Prefix)));
-        }
-
-        method = CellTouchingPatches.GetNumCellsTouchingThisNonRarityPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(CellTouchingPatches.GetNumCellsTouchingThisNonRarityPatch),
-                    nameof(CellTouchingPatches.GetNumCellsTouchingThisNonRarityPatch.Prefix)));
-        }
-
-        method = CellTouchingPatches.GetNumEmptyCellsTouchingThisPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(CellTouchingPatches.GetNumEmptyCellsTouchingThisPatch),
-                    nameof(CellTouchingPatches.GetNumEmptyCellsTouchingThisPatch.Prefix)));
-        }
-
-        method = CellTouchingPatches.GetNumUniqueUpgradesTouchingThisPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(CellTouchingPatches.GetNumUniqueUpgradesTouchingThisPatch),
-                    nameof(CellTouchingPatches.GetNumUniqueUpgradesTouchingThisPatch.Prefix)));
-        }
-        */
-        
-        /*
-        // UI optimization patches - re-enabled with fixes for pattern display
-        method = UIOptimizationPatches.GearDetailsWindowUpdatePatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearDetailsWindowUpdatePatch),
-                    nameof(UIOptimizationPatches.GearDetailsWindowUpdatePatch.Prefix)),
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearDetailsWindowUpdatePatch),
-                    nameof(UIOptimizationPatches.GearDetailsWindowUpdatePatch.Postfix)));
-        }
-
-        method = UIOptimizationPatches.GearDetailsWindowSetupUpgradesPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method, null,
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearDetailsWindowSetupUpgradesPatch),
-                    nameof(UIOptimizationPatches.GearDetailsWindowSetupUpgradesPatch.Postfix)));
-        }
-
-        method = UIOptimizationPatches.GearDetailsWindowOnUpgradesChangedPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method, null,
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearDetailsWindowOnUpgradesChangedPatch),
-                    nameof(UIOptimizationPatches.GearDetailsWindowOnUpgradesChangedPatch.Postfix)));
-        }
-
-        method = UIOptimizationPatches.GearDetailsWindowSelectUpgradePatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method, null,
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearDetailsWindowSelectUpgradePatch),
-                    nameof(UIOptimizationPatches.GearDetailsWindowSelectUpgradePatch.Postfix)));
-        }
-
-        // Rotation patch - only throttle automatic rotations, not user-initiated ones
-        method = UIOptimizationPatches.GearDetailsWindowSetSelectedUpgradeRotationPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearDetailsWindowSetSelectedUpgradeRotationPatch),
-                    nameof(UIOptimizationPatches.GearDetailsWindowSetSelectedUpgradeRotationPatch.Prefix)));
-        }
-        */
-
-        // Transition optimization patches
         method = TransitionOptimizationPatches.GearDetailsWindowSetupPatch.TargetMethod();
         if (method != null)
         {
@@ -160,30 +55,6 @@ public class Plugin : BaseUnityPlugin
                     nameof(TransitionOptimizationPatches.GearDetailsWindowSetupPatch.Postfix)));
         }
 
-        // Virtualization patches disabled - core optimizations are sufficient
-        // These can be re-enabled with proper testing for edge cases
-        /*
-        method = TransitionOptimizationPatches.GearDetailsWindowSetupUpgradesPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method,
-                new HarmonyMethod(typeof(TransitionOptimizationPatches.GearDetailsWindowSetupUpgradesPatch),
-                    nameof(TransitionOptimizationPatches.GearDetailsWindowSetupUpgradesPatch.Prefix)),
-                new HarmonyMethod(typeof(TransitionOptimizationPatches.GearDetailsWindowSetupUpgradesPatch),
-                    nameof(TransitionOptimizationPatches.GearDetailsWindowSetupUpgradesPatch.Postfix)));
-        }
-        */
-
-        // Lazy calculation trigger patch
-        method = UIOptimizationPatches.GearUpgradeUIOnHoverPatch.TargetMethod();
-        if (method != null)
-        {
-            harmony.Patch(method, null,
-                new HarmonyMethod(typeof(UIOptimizationPatches.GearUpgradeUIOnHoverPatch),
-                    nameof(UIOptimizationPatches.GearUpgradeUIOnHoverPatch.Postfix)));
-        }
-
-        // Disable shimmer effect for new upgrades
         method = UIOptimizationPatches.GearUpgradeUISetUpgradePatch.TargetMethod();
         if (method != null)
         {
@@ -192,7 +63,6 @@ public class Plugin : BaseUnityPlugin
                     nameof(UIOptimizationPatches.GearUpgradeUISetUpgradePatch.Postfix)));
         }
 
-        // Optimize upgrade collection/destruction event handling
         method = UIOptimizationPatches.GearDetailsWindowOnUpgradeCollectedOrDestroyedPatch.TargetMethod();
         if (method != null)
         {
@@ -201,7 +71,6 @@ public class Plugin : BaseUnityPlugin
                     nameof(UIOptimizationPatches.GearDetailsWindowOnUpgradeCollectedOrDestroyedPatch.Prefix)));
         }
 
-        // Optimize upgrade collection/destruction event handling for OuroGearWindow
         method = UIOptimizationPatches.OuroGearWindowOnUpgradeCollectedOrDestroyedPatch.TargetMethod();
         if (method != null)
         {
@@ -210,29 +79,22 @@ public class Plugin : BaseUnityPlugin
                     nameof(UIOptimizationPatches.OuroGearWindowOnUpgradeCollectedOrDestroyedPatch.Prefix)));
         }
 
-
-
-        /*
-        // Asynchronous pre-calculation patches - commented out as they cause cached values to be incorrect
-        method = AsynchronousPrecalcPatches.GearSlotOnPointerEnterPatch.TargetMethod();
+        method = DebouncePatches.GearDataEquipUpgradePatch.TargetMethod();
         if (method != null)
         {
             harmony.Patch(method, null,
-                new HarmonyMethod(typeof(AsynchronousPrecalcPatches.GearSlotOnPointerEnterPatch),
-                    nameof(AsynchronousPrecalcPatches.GearSlotOnPointerEnterPatch.Postfix)));
+                new HarmonyMethod(typeof(DebouncePatches.GearDataEquipUpgradePatch),
+                    nameof(DebouncePatches.GearDataEquipUpgradePatch.Postfix)));
         }
 
-        method = AsynchronousPrecalcPatches.GearSlotOnPointerExitPatch.TargetMethod();
+        method = DebouncePatches.GearDataUnequipUpgradePatch.TargetMethod();
         if (method != null)
         {
             harmony.Patch(method, null,
-                new HarmonyMethod(typeof(AsynchronousPrecalcPatches.GearSlotOnPointerExitPatch),
-                    nameof(AsynchronousPrecalcPatches.GearSlotOnPointerExitPatch.Postfix)));
+                new HarmonyMethod(typeof(DebouncePatches.GearDataUnequipUpgradePatch),
+                    nameof(DebouncePatches.GearDataUnequipUpgradePatch.Postfix)));
         }
-        */
 
-        /*
-        // Player data optimization patches
         method = PlayerDataPatches.UnequipFromAllPatch.TargetMethod();
         if (method != null)
         {
@@ -240,30 +102,23 @@ public class Plugin : BaseUnityPlugin
                 new HarmonyMethod(typeof(PlayerDataPatches.UnequipFromAllPatch),
                     nameof(PlayerDataPatches.UnequipFromAllPatch.Prefix)));
         }
-        */
 
-        // Skin optimization patches - disabled due to functionality issues
-        // The deferred loading prevents skins from loading entirely
-        /*
-        method = SkinOptimizationPatches.GearDetailsWindowSetupUpgradesSkinModePatch.TargetMethod();
+        method = PlayerDataPatches.CollectInstancePatch.TargetMethod();
         if (method != null)
         {
             harmony.Patch(method,
-                new HarmonyMethod(typeof(SkinOptimizationPatches.GearDetailsWindowSetupUpgradesSkinModePatch),
-                    nameof(SkinOptimizationPatches.GearDetailsWindowSetupUpgradesSkinModePatch.Prefix)),
-                new HarmonyMethod(typeof(SkinOptimizationPatches.GearDetailsWindowSetupUpgradesSkinModePatch),
-                    nameof(SkinOptimizationPatches.GearDetailsWindowSetupUpgradesSkinModePatch.Postfix)));
+                new HarmonyMethod(typeof(PlayerDataPatches.CollectInstancePatch),
+                    nameof(PlayerDataPatches.CollectInstancePatch.Prefix)));
         }
 
-        method = SkinOptimizationPatches.GearDetailsWindowOnSkinAreaInteractionPatch.TargetMethod();
+        method = PlayerDataPatches.OnAwakePatch.TargetMethod();
         if (method != null)
         {
             harmony.Patch(method, null,
-                new HarmonyMethod(typeof(SkinOptimizationPatches.GearDetailsWindowOnSkinAreaInteractionPatch),
-                    nameof(SkinOptimizationPatches.GearDetailsWindowOnSkinAreaInteractionPatch.Postfix)));
+                new HarmonyMethod(typeof(PlayerDataPatches.OnAwakePatch),
+                    nameof(PlayerDataPatches.OnAwakePatch.Postfix)));
         }
-        */
 
-        Logger.LogInfo("PerformanceEnhancedMenu v2.0.0 loaded successfully with comprehensive optimizations!");
+        Logger.LogInfo($"{PluginName} loaded");
     }
 }

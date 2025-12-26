@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using HarmonyLib;
-using UnityEngine;
-
-namespace PerformanceEnhancedMenu;
 
 public static class CellTouchingPatches
 {
@@ -20,12 +14,27 @@ public static class CellTouchingPatches
 
         public static bool Prefix(IUpgradable prefab, UpgradeInstance upgrade, ref int __result)
         {
-            if (StatCalcPatches.prismConnectedCounts.TryGetValue(upgrade.InstanceID, out int count))
+            try
             {
-                __result = count;
-                return false;
+                if (StatCalcPatches.prismConnectedCounts.TryGetValue(upgrade.InstanceID, out int count))
+                {
+                    __result = count;
+                    return false;
+                }
+
+                if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+                {
+                    __result = 1;
+                    return false;
+                }
+
+                return true;
             }
-            return true;
+            catch (System.Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetConnectedPrismCountRecursivePatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 
@@ -39,37 +48,42 @@ public static class CellTouchingPatches
 
         public static bool Prefix(IUpgradable prefab, UpgradeInstance upgrade, object rarities, ref int __result)
         {
-            // Use the new comprehensive caching system
-            PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-
-            if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+            try
             {
-                if (rarities.Equals(StatCalcPatches.rarityFlagsStandard))
+                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+
+                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
                 {
-                    __result = stats.cellsTouching; // For now, return total - will need to filter by rarity if needed
-                }
-                else if (rarities.Equals(StatCalcPatches.rarityFlagsRare))
-                {
-                    // This would need more complex logic to filter by rarity
-                    // For performance, we'll fall back to original for now
-                    return true;
-                }
-                else if (rarities.Equals(StatCalcPatches.rarityFlagsEpic))
-                {
-                    return true;
-                }
-                else if (rarities.Equals(StatCalcPatches.rarityFlagsExotic))
-                {
-                    return true;
-                }
-                else
-                {
-                    __result = stats.cellsTouching;
+                    if (rarities.Equals(StatCalcPatches.rarityFlagsStandard))
+                    {
+                        __result = stats.cellsTouching;
+                    }
+                    else if (rarities.Equals(StatCalcPatches.rarityFlagsRare))
+                    {
+                        return true;
+                    }
+                    else if (rarities.Equals(StatCalcPatches.rarityFlagsEpic))
+                    {
+                        return true;
+                    }
+                    else if (rarities.Equals(StatCalcPatches.rarityFlagsExotic))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        __result = stats.cellsTouching;
+                        return false;
+                    }
                     return false;
                 }
-                return false;
+                return true;
             }
-            return true;
+            catch (System.Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetNumCellsTouchingThisPatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 
@@ -84,13 +98,21 @@ public static class CellTouchingPatches
 
         public static bool Prefix(IUpgradable prefab, UpgradeInstance upgrade, ref int __result)
         {
-            PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-            if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+            try
             {
-                __result = stats.numRaritiesTouching;
-                return false;
+                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                {
+                    __result = stats.numRaritiesTouching;
+                    return false;
+                }
+                return true;
             }
-            return true;
+            catch (System.Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetNumRaritiesTouchingThisPatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 
@@ -105,22 +127,28 @@ public static class CellTouchingPatches
 
         public static bool Prefix(IUpgradable prefab, UpgradeInstance upgrade, ref int __result)
         {
-            // If deferring expensive calculations, return 0 and mark for later computation
-            if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+            try
             {
-                // Queue this upgrade for lazy calculation
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-                __result = 0; // Return default value during setup
-                return false;
-            }
+                if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+                {
+                    PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                    __result = 0;
+                    return false;
+                }
 
-            PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-            if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
-            {
-                __result = stats.cellsTouching;
-                return false;
+                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                {
+                    __result = stats.cellsTouching;
+                    return false;
+                }
+                return true;
             }
-            return true;
+            catch (System.Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetNumCellsTouchingThisNonRarityPatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 
@@ -135,21 +163,28 @@ public static class CellTouchingPatches
 
         public static bool Prefix(IUpgradable prefab, UpgradeInstance upgrade, ref int __result)
         {
-            // If deferring expensive calculations, return 0 and mark for later computation
-            if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+            try
             {
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-                __result = 0; // Return default value during setup
-                return false;
-            }
+                if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+                {
+                    PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                    __result = 0;
+                    return false;
+                }
 
-            PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-            if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
-            {
-                __result = stats.emptyCellsTouching;
-                return false;
+                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                {
+                    __result = stats.emptyCellsTouching;
+                    return false;
+                }
+                return true;
             }
-            return true;
+            catch (System.Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetNumEmptyCellsTouchingThisPatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 
@@ -164,13 +199,21 @@ public static class CellTouchingPatches
 
         public static bool Prefix(IUpgradable prefab, UpgradeInstance upgrade, ref int __result)
         {
-            PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-            if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+            try
             {
-                __result = stats.uniqueUpgradesTouching;
-                return false;
+                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                {
+                    __result = stats.uniqueUpgradesTouching;
+                    return false;
+                }
+                return true;
             }
-            return true;
+            catch (System.Exception e)
+            {
+                SparrohPlugin.Logger.LogError($"Error in GetNumUniqueUpgradesTouchingThisPatch.Prefix: {e.Message}\n{e.StackTrace}");
+                return true;
+            }
         }
     }
 }
