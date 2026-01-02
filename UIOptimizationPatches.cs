@@ -78,7 +78,7 @@ public static class UIOptimizationPatches
                         }
                     }
 
-                    PerformanceEnhancedMenu.ClearAllCaches();
+                    PerformanceEnhancedMenuPlugin.ClearAllCaches();
 
                     return false;
                 }
@@ -128,7 +128,7 @@ public static class UIOptimizationPatches
                         }
                     }
 
-                    PerformanceEnhancedMenu.ClearAllCaches();
+                    PerformanceEnhancedMenuPlugin.ClearAllCaches();
 
                     return false;
                 }

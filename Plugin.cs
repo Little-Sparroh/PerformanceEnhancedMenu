@@ -9,7 +9,7 @@ public class SparrohPlugin : BaseUnityPlugin
 {
     public const string PluginGUID = "sparroh.enhancedmenuperformance";
     public const string PluginName = "EnhancedMenuPerformance";
-    public const string PluginVersion = "2.2.0";
+    public const string PluginVersion = "2.3.1";
 
     internal new static ManualLogSource Logger;
 

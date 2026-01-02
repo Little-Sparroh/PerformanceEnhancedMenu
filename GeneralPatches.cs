@@ -8,11 +8,11 @@ public static class GeneralPatches
     {
         public static MethodBase TargetMethod()
         {
-            var method = AccessTools.Method(typeof(PlayerData.GearData), "EquipUpgrade", new Type[] { typeof(UpgradeInstance), typeof(sbyte), typeof(sbyte), typeof(byte) });
+            var method = AccessTools.Method(typeof(PlayerData.GearData), "EquipUpgrade", new Type[] { typeof(UpgradeInstance), typeof(sbyte), typeof(sbyte), typeof(byte), typeof(bool) });
             return method;
         }
 
-        public static void Postfix(PlayerData.GearData __instance, UpgradeInstance upgrade, sbyte x, sbyte y, byte rotation)
+        public static void Postfix(PlayerData.GearData __instance, UpgradeInstance upgrade, sbyte x, sbyte y, byte rotation, bool sort)
         {
             try
             {
@@ -21,7 +21,7 @@ public static class GeneralPatches
                     return;
                 }
                 StatCalcPatches.ClearCaches();
-                PerformanceEnhancedMenu.ClearAllCaches();
+                PerformanceEnhancedMenuPlugin.ClearAllCaches();
                 StatCalcPatches.RecomputeTotals(__instance);
             }
             catch (Exception e)
@@ -50,7 +50,7 @@ public static class GeneralPatches
                     return;
                 }
                 StatCalcPatches.ClearCaches();
-                PerformanceEnhancedMenu.ClearAllCaches();
+                PerformanceEnhancedMenuPlugin.ClearAllCaches();
                 StatCalcPatches.RecomputeTotals(__instance);
             }
             catch (Exception e)

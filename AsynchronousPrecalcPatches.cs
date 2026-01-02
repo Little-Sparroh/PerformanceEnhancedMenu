@@ -69,7 +69,7 @@ public static class AsynchronousPrecalcPatches
 
     private static IEnumerator PrecalculateStats(IUpgradable gear)
     {
-        PerformanceEnhancedMenu.GetCachedEquippedUpgrade(gear, 0, 0);
+        PerformanceEnhancedMenuPlugin.GetCachedEquippedUpgrade(gear, 0, 0);
 
         var gearData = PlayerData.GetGearData(gear);
         System.Collections.IList equippedUpgrades = StatCalcPatches.equippedUpgradesField.GetValue(gearData) as System.Collections.IList;
@@ -90,14 +90,14 @@ public static class AsynchronousPrecalcPatches
                 UpgradeInstance upgrade = (UpgradeInstance)StatCalcPatches.getUpgradeMethod.Invoke(eq, null);
                 if (upgrade != null)
                 {
-                    PerformanceEnhancedMenu.ComputeCellTouchingStats(gear, upgrade);
+                    PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(gear, upgrade);
                 }
                 
                 yield return null;
             }
         }
 
-        if (gear is global::MiniCannon && !PerformanceEnhancedMenu.deferExpensiveCalculations)
+        if (gear is global::MiniCannon && !PerformanceEnhancedMenuPlugin.deferExpensiveCalculations)
         {
             StatCalcPatches.RecomputeTotals(gearData);
         }

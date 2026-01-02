@@ -22,7 +22,7 @@ public static class CellTouchingPatches
                     return false;
                 }
 
-                if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+                if (PerformanceEnhancedMenuPlugin.deferExpensiveCalculations)
                 {
                     __result = 1;
                     return false;
@@ -50,9 +50,9 @@ public static class CellTouchingPatches
         {
             try
             {
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
 
-                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                if (PerformanceEnhancedMenuPlugin.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
                 {
                     if (rarities.Equals(StatCalcPatches.rarityFlagsStandard))
                     {
@@ -100,8 +100,8 @@ public static class CellTouchingPatches
         {
             try
             {
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenuPlugin.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
                 {
                     __result = stats.numRaritiesTouching;
                     return false;
@@ -129,15 +129,15 @@ public static class CellTouchingPatches
         {
             try
             {
-                if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+                if (PerformanceEnhancedMenuPlugin.deferExpensiveCalculations)
                 {
-                    PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                    PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
                     __result = 0;
                     return false;
                 }
 
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenuPlugin.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
                 {
                     __result = stats.cellsTouching;
                     return false;
@@ -165,15 +165,15 @@ public static class CellTouchingPatches
         {
             try
             {
-                if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+                if (PerformanceEnhancedMenuPlugin.deferExpensiveCalculations)
                 {
-                    PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
+                    PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
                     __result = 0;
                     return false;
                 }
 
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenuPlugin.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
                 {
                     __result = stats.emptyCellsTouching;
                     return false;
@@ -201,8 +201,8 @@ public static class CellTouchingPatches
         {
             try
             {
-                PerformanceEnhancedMenu.ComputeCellTouchingStats(prefab, upgrade);
-                if (PerformanceEnhancedMenu.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
+                PerformanceEnhancedMenuPlugin.ComputeCellTouchingStats(prefab, upgrade);
+                if (PerformanceEnhancedMenuPlugin.cellTouchingCache.TryGetValue(upgrade.InstanceID, out var stats))
                 {
                     __result = stats.uniqueUpgradesTouching;
                     return false;

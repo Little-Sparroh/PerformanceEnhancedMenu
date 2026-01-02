@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "Sparroh"
 name = "PerformanceEnhancedMenu"
-description = "Performance-enhancing mod that caches gear upgrade calculations to eliminate menu lag for heavy equipment."
+description = "Performance-enhancing mod that caches gear upgrade calculations and sets an inventory limit to eliminate menu lag for upgrades."
 websiteUrl = "https://github.com/Little-Sparroh/PerformanceEnhancedMenu"
 containsNsfwContent = false
 

@@ -21,7 +21,7 @@ public static class TransitionOptimizationPatches
         {
             try
             {
-                PerformanceEnhancedMenu.deferExpensiveCalculations = true;
+                PerformanceEnhancedMenuPlugin.deferExpensiveCalculations = true;
 
                 OptimizeGearPreviewSetup(__instance, upgradable);
 
@@ -38,7 +38,7 @@ public static class TransitionOptimizationPatches
         {
             try
             {
-                PerformanceEnhancedMenu.deferExpensiveCalculations = false;
+                PerformanceEnhancedMenuPlugin.deferExpensiveCalculations = false;
 
                 PostSetupOptimizations(__instance, upgradable);
             }

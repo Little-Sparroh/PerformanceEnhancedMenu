@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class PerformanceEnhancedMenu
+public static class PerformanceEnhancedMenuPlugin
 {
     internal static Dictionary<(int gearId, int x, int y), UpgradeInstance> upgradeGridCache = new();
 

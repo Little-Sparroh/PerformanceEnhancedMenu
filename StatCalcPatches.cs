@@ -53,7 +53,7 @@ public static class StatCalcPatches
     {
         try
         {
-            if (PerformanceEnhancedMenu.deferExpensiveCalculations)
+            if (PerformanceEnhancedMenuPlugin.deferExpensiveCalculations)
             {
                 return;
             }

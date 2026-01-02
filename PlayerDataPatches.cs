@@ -23,7 +23,7 @@ public static class PlayerDataPatches
             {
                 if (upgrade != null && !upgrade.RemoveAfterMission)
                 {
-                    PerformanceEnhancedMenu.ClearAllCaches();
+                    PerformanceEnhancedMenuPlugin.ClearAllCaches();
                     return false;
                 }
 

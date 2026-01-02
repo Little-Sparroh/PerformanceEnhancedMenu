@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.3.1 (2026-01-02)
+
+### Bug Fixes
+* **Game Update Compatibility**: Updated EquipUpgrade method patch to handle new bool parameter added in recent game update, preventing Harmony patch failures
+
 ## 2.3.0 (2025-12-24)
 
 ### New Features
